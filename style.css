@@ -22,42 +22,26 @@ header { background: #2c3e50; color: white; padding: 15px; text-align: center; p
 .stats { text-align: center; margin-top: 10px; color: #888; }
 .summary-cards { display: flex; gap: 10px; margin-bottom: 20px; }
 
-/* 修改卡片样式，防止内容溢出 */
+/* 卡片防溢出 */
 .card {
     background: white;
     flex: 1;
-    padding: 15px;
+    padding: 12px 8px;
     text-align: center;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    min-width: 0;      /* 防止 flex 子项溢出 */
-    overflow: hidden;  /* 隐藏溢出内容 */
-}
-
-.card-title { color: #888; font-size: 0.9em; }
-
-/* 修改金额显示样式，长数字自动换行或截断 */
-.card-value {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-top: 5px;
-    word-break: break-all;   /* 长数字自动换行 */
-    line-height: 1.2;        /* 调整行高使换行后美观 */
-    max-width: 100%;         /* 确保不超出父容器 */
-}
-
-/* 如果你希望长数字显示为省略号（例如 ¥999999...），请将上面 .card-value 替换为以下代码 */
-/*
-.card-value {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-top: 5px;
-    white-space: nowrap;
+    min-width: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
+}
+.card-title { color: #888; font-size: 0.9em; }
+.card-value {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 5px;
+    word-break: break-word;
+    line-height: 1.3;
     max-width: 100%;
 }
-*/
 
 .section-title { margin: 15px 0 10px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px; }
 .record-list { list-style: none; max-height: 40vh; overflow-y: auto; }
@@ -72,3 +56,9 @@ header { background: #2c3e50; color: white; padding: 15px; text-align: center; p
 .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
 .back-btn { background: none; border: none; font-size: 1.2em; color: #3498db; padding: 5px 10px; cursor: pointer; }
 .action-buttons { display: flex; gap: 10px; margin: 15px 0; }
+
+/* 点击反馈 */
+.clickable:active {
+    background: #f0f0f0;
+    transform: scale(0.99);
+}
