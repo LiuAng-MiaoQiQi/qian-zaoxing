@@ -21,9 +21,44 @@ header { background: #2c3e50; color: white; padding: 15px; text-align: center; p
 .member-balance { color: #27ae60; font-weight: bold; }
 .stats { text-align: center; margin-top: 10px; color: #888; }
 .summary-cards { display: flex; gap: 10px; margin-bottom: 20px; }
-.card { background: white; flex: 1; padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+/* 修改卡片样式，防止内容溢出 */
+.card {
+    background: white;
+    flex: 1;
+    padding: 15px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    min-width: 0;      /* 防止 flex 子项溢出 */
+    overflow: hidden;  /* 隐藏溢出内容 */
+}
+
 .card-title { color: #888; font-size: 0.9em; }
-.card-value { font-size: 1.5em; font-weight: bold; margin-top: 5px; }
+
+/* 修改金额显示样式，长数字自动换行或截断 */
+.card-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 5px;
+    word-break: break-all;   /* 长数字自动换行 */
+    line-height: 1.2;        /* 调整行高使换行后美观 */
+    max-width: 100%;         /* 确保不超出父容器 */
+}
+
+/* 如果你希望长数字显示为省略号（例如 ¥999999...），请将上面 .card-value 替换为以下代码 */
+/*
+.card-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+*/
+
 .section-title { margin: 15px 0 10px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px; }
 .record-list { list-style: none; max-height: 40vh; overflow-y: auto; }
 .record-item { background: white; padding: 10px; margin-bottom: 5px; border-radius: 6px; display: flex; justify-content: space-between; font-size: 0.9em; }
