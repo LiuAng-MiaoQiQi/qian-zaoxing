@@ -92,7 +92,7 @@ function goBackToMembers() {
   renderMemberList();
 }
 
-// 更新汇总
+// 更新汇总（含明细点击查看详情）
 function updateSummary() {
   const totalMembers = members.length;
   const totalBalance = members.reduce((sum, m) => sum + m.balance, 0);
@@ -108,8 +108,10 @@ function updateSummary() {
           todayDetails.push({
             memberName: m.name,
             amount: t.amount,
-            note: t.note,
-            time: t.date.slice(11)
+            note: t.note || '无备注',
+            time: t.date.slice(11),
+            fullDate: t.date,
+            type: t.type
           });
         }
       });
@@ -122,18 +124,44 @@ function updateSummary() {
   
   const detailList = document.getElementById('today-detail-list');
   if (todayDetails.length === 0) {
-    detailList.innerHTML = '<li class="record-item">今天还没有消费记录</li>';
+    detailList.innerHTML = '<li class="record-item" style="justify-content:center;color:#999">今天还没有消费记录</li>';
   } else {
-    detailList.innerHTML = todayDetails.map(d => `
-      <li class="record-item">
-        <span>${d.memberName}</span>
+    detailList.innerHTML = todayDetails.map((d, index) => `
+      <li class="record-item clickable" data-index="${index}" style="cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 10px;">
+        <span style="font-weight:500;">${d.memberName}</span>
         <span class="record-type consume">-¥${(d.amount / 100).toFixed(2)}</span>
-        <span style="color:#888;">${d.note || ''}</span>
-        <span style="font-size:0.8em;">${d.time}</span>
+        <span style="color:#888;font-size:0.85em;">${d.note}</span>
+        <span style="color:#aaa;font-size:0.7em;margin-left:auto;">${d.time}</span>
       </li>
     `).join('');
+
+    document.querySelectorAll('#today-detail-list .clickable').forEach(el => {
+      el.addEventListener('click', function() {
+        const index = parseInt(this.dataset.index);
+        const detail = todayDetails[index];
+        if (detail) {
+          showDetailModal(detail);
+        }
+      });
+    });
   }
 }
+
+// 显示交易详情弹窗
+function showDetailModal(detail) {
+  document.getElementById('detail-modal-title').textContent = '💰 消费详情';
+  document.getElementById('detail-member-name').textContent = detail.memberName || '未知会员';
+  document.getElementById('detail-type').textContent = detail.type === 'consume' ? '消费' : '充值';
+  document.getElementById('detail-amount').textContent = '-¥' + (detail.amount / 100).toFixed(2);
+  document.getElementById('detail-note').textContent = detail.note || '无备注';
+  document.getElementById('detail-time').textContent = detail.fullDate || detail.time || '未知时间';
+  document.getElementById('detail-modal').classList.add('active');
+}
+
+// 关闭详情弹窗
+document.getElementById('close-detail-modal').addEventListener('click', function() {
+  document.getElementById('detail-modal').classList.remove('active');
+});
 
 // 添加会员
 function addMember(name, phone) {
@@ -141,7 +169,7 @@ function addMember(name, phone) {
     id: generateId(),
     name,
     phone,
-    balance: 0, // 单位：分
+    balance: 0,
     transactions: []
   };
   members.push(newMember);
@@ -159,7 +187,7 @@ function deleteMember(id) {
   goBackToMembers();
 }
 
-// 充值：金额元转分
+// 充值
 function rechargeMember(id, amountYuan, note) {
   const member = members.find(m => m.id === id);
   if (!member) return false;
@@ -180,7 +208,7 @@ function rechargeMember(id, amountYuan, note) {
   return true;
 }
 
-// 消费：金额元转分
+// 消费
 function consumeMember(id, amountYuan, note) {
   const member = members.find(m => m.id === id);
   if (!member) return false;
